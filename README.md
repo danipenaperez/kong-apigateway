@@ -3,14 +3,24 @@ Kong api gateway demo
 
 Show how to deploy a service behind kong api gateway (DB Less- local)
 
-First run a simple echo service and test that works
+# First run a simple echo service and test that works
 ```
-docker run --rm -p 3000:80 ealen/echo-server
-y llamamos y nos hace echo  
+docker run --rm -p 3000:80 ealen/echo-server 
 $ curl http://localhost:3000?echo_body=amazing
 "amazing"
 ```
 
+# Configure kong
+Using kong.conf
+```
+...
+database = off
+...
+...
+declarative_config = /etc/kong/kong.yml
+
+```
+# Run Kong Docker image using configuration files (pass as volume)
 Then run Kong API gateway (kong is configured via kong.conf file, and redirect is via kong.yml)
 ```
 docker run --rm --name kong \
@@ -27,6 +37,8 @@ docker run --rm --name kong \
     --net=host \
     kong
 ```
+
+# TEST
 Now Request agains Kong to fetch internal route service 
 ```
 $ curl http://localhost:8000/public-path-to-echo-service?echo_body=amazing
