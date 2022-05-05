@@ -18,6 +18,32 @@ database = off
 declarative_config = /etc/kong/kong.yml
 
 ```
+# Configure secrets JWT plugin
+Using kong.yml
+```
+routes:
+  - name: echo-service-route
+    service: echo-service
+    paths:
+      - /public-path-to-echo-service
+plugins:
+  - name: jwt
+    route: echo-service-route
+    enabled: true
+    config: 
+      key_claim_name: kid
+      claims_to_verify:  
+        - exp
+consumers:
+  - username: thisserverissuer
+jwt_secrets:
+  - consumer: thisserverissuer
+    key: thisserverissuer_kid
+    secret: "MY-SECRET"
+
+```
+
+
 # Run Kong Docker image using configuration files (pass as volume)
 Then run Kong API gateway (kong is configured via kong.conf file, and redirect is via kong.yml)
 ```
